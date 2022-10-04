@@ -24,15 +24,32 @@ int startingNumber = 0;
 int currentStartingPoint  = 0;
  
  
-void insertInOrder(std::vector<int>& vector, int number) {
- for (int i = 0; i < vector.size(); i++){
-    if (vector[i] > number){
-    vector.insert(vector.begin()+i,number);
-    return;
+void orderInsert( std::vector<int>& list, int l, int r, int x) // based off of binarySearch algorithm from GeeksforGeeks.com
+{
+    int mid = mid = l + (r - l) / 2;;
+    if (r >= l) {
+    
+ 
+        if (list[mid] == x) {
+            list.insert(list.begin()+mid,x);
+            return;
         }
-   }
- vector.insert(vector.end(),number);
- return;
+
+        else if (list[mid] > x) {
+             orderInsert(list, l, mid - 1, x);
+             return;
+        } else {
+        orderInsert(list, mid + 1, r, x);
+        return;
+        }
+    }
+ 
+    list.insert(list.begin()+mid,x);
+
+}
+
+inline void insertInOrder(std::vector<int>& list, int item){
+    orderInsert(list,0,list.size()-1,item);
 }
  
  
@@ -48,7 +65,7 @@ int main() {
   }
  into.close();
  float totalTotal = 0;
- const int sizeofPoints = sqrt(rawPoints.size())*sqrt(sqrt(rawPoints.size())) * sqrt(sqrt(sqrt(rawPoints.size()))) * sqrt(sqrt(sqrt(sqrt(rawPoints.size())))); // Reduces the amount of points calculated.
+ const int sizeofPoints = rawPoints.size(); // Reduces the amount of points calculated.
  float distance  = 0;
  std::vector<float> pointsToCheck;    
  std::vector<std::vector<float>>points{};
@@ -148,10 +165,3 @@ while (pointToStartAt != points.size()) {
  return 0;
 }
  
- 
- 
- 
- 
- 
-
-
