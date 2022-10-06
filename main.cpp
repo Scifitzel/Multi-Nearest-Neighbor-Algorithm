@@ -24,33 +24,6 @@ int startingNumber = 0;
 int currentStartingPoint  = 0;
  
  
-void orderInsert( std::vector<int>& list, int l, int r, int x) // based off of binarySearch algorithm from GeeksforGeeks.com
-{
-    int mid = mid = l + (r - l) / 2;;
-    if (r >= l) {
-    
- 
-        if (list[mid] == x) {
-            list.insert(list.begin()+mid,x);
-            return;
-        }
-
-        else if (list[mid] > x) {
-             orderInsert(list, l, mid - 1, x);
-             return;
-        } else {
-        orderInsert(list, mid + 1, r, x);
-        return;
-        }
-    }
- 
-    list.insert(list.begin()+mid,x);
-
-}
-
-inline void insertInOrder(std::vector<int>& list, int item){
-    orderInsert(list,0,list.size()-1,item);
-}
  
  
 int main() {
@@ -65,7 +38,7 @@ int main() {
   }
  into.close();
  float totalTotal = 0;
- const int sizeofPoints = rawPoints.size(); // Reduces the amount of points calculated.
+ const int sizeofPoints = rawPoints.size() * 6/5; // Reduces the amount of points calculated.
  float distance  = 0;
  std::vector<float> pointsToCheck;    
  std::vector<std::vector<float>>points{};
@@ -118,7 +91,7 @@ while (pointToStartAt != points.size()) {
         int currentPoint  = startingpoint;
         
         total = sqrt( (rawPoints[pointsAlreadyTraveled[pointsAlreadyTraveled.size()-1]].x-rawPoints[currentPoint].x)*(rawPoints[pointsAlreadyTraveled[pointsAlreadyTraveled.size()-1]].x-rawPoints[currentPoint].x) + (rawPoints[pointsAlreadyTraveled[pointsAlreadyTraveled.size()-1]].y-rawPoints[currentPoint].y)*(rawPoints[pointsAlreadyTraveled[pointsAlreadyTraveled.size()-1]].y-rawPoints[currentPoint].y));
-        insertInOrder(pointsAlreadyUsed,currentPoint);
+        pointsAlreadyUsed.insert(std::upper_bound(pointsAlreadyUsed.begin(),pointsAlreadyUsed.end(),currentPoint),currentPoint);
         while (pointsAlreadyUsed.size() != points.size()){
             index = -1;
             for (int i = 0; i <  points[currentPoint].size(); i+=2){
@@ -131,7 +104,7 @@ while (pointToStartAt != points.size()) {
             if (index != -1){
             total += points[currentPoint][index-1];
             currentPoint = points[currentPoint][index];
-            insertInOrder(pointsAlreadyUsed,currentPoint);
+            pointsAlreadyUsed.insert(std::upper_bound(pointsAlreadyUsed.begin(),pointsAlreadyUsed.end(),currentPoint),currentPoint);
                 } else{
             total = -10;
             break;
@@ -152,7 +125,7 @@ while (pointToStartAt != points.size()) {
     totalTotal += sqrt( (rawPoints[currentStartingPoint].x-rawPoints[pointsAlreadyTraveled[pointsAlreadyTraveled.size()-1]].x)*(rawPoints[currentStartingPoint].x-rawPoints[pointsAlreadyTraveled[pointsAlreadyTraveled.size()-1]].x)+ (rawPoints[currentStartingPoint].y-rawPoints[pointsAlreadyTraveled[pointsAlreadyTraveled.size()-1]].y)*(rawPoints[currentStartingPoint].y-rawPoints[pointsAlreadyTraveled[pointsAlreadyTraveled.size()-1]].y) );
     pointToStartAt++;
     pointsAlreadyTraveled.push_back(currentStartingPoint);
-    insertInOrder(pointsAlreadyTraveledSorted,currentStartingPoint);
+    pointsAlreadyTraveledSorted.insert(std::upper_bound(pointsAlreadyTraveledSorted.begin(),pointsAlreadyTraveledSorted.end(),currentStartingPoint),currentStartingPoint);
     std::cout << currentStartingPoint << "\n";
 }
  std::ofstream outo{"output.txt"};
@@ -162,6 +135,14 @@ while (pointToStartAt != points.size()) {
  }
  outo<< "\nTotal length: " << totalTotal << "\n";
  outo.close();
+
  return 0;
 }
  
+ 
+ 
+ 
+ 
+ 
+
+
