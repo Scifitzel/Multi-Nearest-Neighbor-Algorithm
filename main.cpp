@@ -40,7 +40,7 @@ int main() {
   }
  into.close();
  float totalTotal = 0;
- const int sizeofPoints = 10/5 * rawPoints.size()-2; // Reduces the amount of points calculated.
+ const int sizeofPoints = 7/5 * rawPoints.size(); // Reduces the amount of points calculated.
  float distance  = 0;
  std::vector<float> pointsToCheck;    
  std::vector<std::vector<float>>points{};
@@ -111,8 +111,7 @@ while (pointToStartAt != points.size()) {
         std::vector<int> pointsAlreadyUsed{};
         pointsAlreadyUsed = pointsAlreadyTraveledSorted;
         
-        
-        while (startingpoint < points.size() && (std::binary_search(pointsAlreadyUsed.begin(),pointsAlreadyUsed.end(), startingpoint) ||  (( (way == UP &&  rawPoints[firstPoint].y-rawPoints[startingpoint].y < 0) ||   (way == DOWN &&  rawPoints[firstPoint].y-rawPoints[startingpoint].y > 0) || ((way == RIGHT &&  rawPoints[firstPoint].x-rawPoints[startingpoint].x < 0) || (way == LEFT && rawPoints[firstPoint].x-rawPoints[secondPoint].x > 0))) && (!reachedSecondPoint) ))) {     
+        while (startingpoint < points.size() && (std::binary_search(pointsAlreadyUsed.begin(),pointsAlreadyUsed.end(), startingpoint) ||  (( (way == UP &&  rawPoints[firstPoint].y-rawPoints[startingpoint].y < 0) ||   (way == DOWN &&  rawPoints[firstPoint].y-rawPoints[startingpoint].y > 0) || ((way == RIGHT &&  rawPoints[firstPoint].x-rawPoints[startingpoint].x > 0) || (way == LEFT && rawPoints[firstPoint].x-rawPoints[secondPoint].x < 0))) && (!reachedSecondPoint) ))) {     
             startingpoint++;
         }
         if (startingpoint == points.size()){
@@ -157,11 +156,19 @@ while (pointToStartAt != points.size()) {
     if (currentStartingPoint == secondPoint) {
         reachedSecondPoint = true;
     }
+    if (pointsAlreadyTraveled[pointsAlreadyTraveled.size()-1] == currentStartingPoint) {
+        totalTotal = -10;
+        pointToStartAt = points.size();
+    }
+
     pointsAlreadyTraveled.push_back(currentStartingPoint);
+
     pointsAlreadyTraveledSorted.insert(std::upper_bound(pointsAlreadyTraveledSorted.begin(),pointsAlreadyTraveledSorted.end(),currentStartingPoint),currentStartingPoint);
     std::cout << pointsAlreadyTraveled.size() << "\n";
     if  (pointToStartAt == points.size()) {
+        if (totalTotal != -10) {
          totalTotal += sqrt( (rawPoints[currentStartingPoint].x-rawPoints[firstPoint].x)*(rawPoints[currentStartingPoint].x-rawPoints[firstPoint].x)+ (rawPoints[currentStartingPoint].y-rawPoints[firstPoint].y)*(rawPoints[currentStartingPoint].y-rawPoints[firstPoint].y) );
+        }
     if (firstTotalTotal == 0) { // we reset the thing in case having the firstPoint and secondPoint being swapped leads to a shorter tour.
         firstTotalTotal = totalTotal;
         totalTotal = 0;
@@ -175,7 +182,22 @@ while (pointToStartAt != points.size()) {
         currentStartingPoint = firstPoint;
         firstPoint = secondPoint;
         secondPoint = currentStartingPoint;
-    } else if (firstTotalTotal < totalTotal) {
+
+        if (abs(rawPoints[firstPoint].x-rawPoints[secondPoint].x) < abs(rawPoints[firstPoint].y-rawPoints[secondPoint].y)){
+        if (rawPoints[firstPoint].x > rawPoints[secondPoint].x){
+            way = RIGHT;
+        } else {
+            way = LEFT;
+        }
+    } else {
+        if (rawPoints[firstPoint].y < rawPoints[secondPoint].y) {
+            way = DOWN;
+        } else {
+            way = UP;
+        }
+    }
+
+    } else if (totalTotal == -10 || firstTotalTotal < totalTotal && firstTotalTotal != -10) {
         totalTotal = firstTotalTotal;
         pointsAlreadyTraveled = firstPointsAlreadyTraveled;
     }
@@ -194,3 +216,9 @@ while (pointToStartAt != points.size()) {
 }
  
  
+ 
+ 
+ 
+ 
+
+
